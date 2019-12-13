@@ -4,8 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using proAgil.api.Models;
-using proAgil.api.Data;
+using proAgil.Domain;
+using proAgil.Repository;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,8 +15,8 @@ namespace proAgil.api.Controllers
     [Route("api/[controller]")]
     public class WeatherForecastController : ControllerBase
     {
-        public readonly DataContext _context;
-        public WeatherForecastController(DataContext context)
+        public readonly proAgilContext _context;
+        public WeatherForecastController(proAgilContext context)
         {
             _context = context;
         }
@@ -37,20 +37,6 @@ namespace proAgil.api.Controllers
             }            
             
         }
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetId(int id)
-        {
-            try
-            {
-                var results = await _context.Eventos.FirstOrDefaultAsync(x=>x.EventoId == id);
-                return Ok(results);
-            }
-            catch (System.Exception)
-            {
-                
-                return this.StatusCode(StatusCodes.Status500InternalServerError, "Banco de Dados Falhou");
-            }
-            
-        }
+        
     } 
 }

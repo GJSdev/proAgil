@@ -10,9 +10,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using proAgil.api.Data;
+using proAgil.Repository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.StaticFiles;
 
 
 namespace proAgil.api
@@ -31,9 +32,10 @@ namespace proAgil.api
         {                
             services.AddControllers();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_3_0);            
-            services.AddDbContext<DataContext>(
+            services.AddDbContext<proAgilContext>(
                 x => x.UseSqlite(Configuration.GetConnectionString("DefaultConnection"))
                 );
+            services.AddScoped<IproAgilRepository, proAgilRepository>();
             services.AddCors();            
         }
 
@@ -46,7 +48,7 @@ namespace proAgil.api
             }            
             // app.UseHttpsRedirection();
             app.UseCors(x=>x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());        
-                      
+            app.UseStaticFiles();         
             app.UseRouting();
 
             app.UseAuthorization();
